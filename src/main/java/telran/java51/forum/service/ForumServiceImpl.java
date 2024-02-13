@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import telran.java51.forum.dto.MessageInCommentDto;
-import telran.java51.forum.dto.PrePostDto;
+import telran.java51.forum.dto.PostDto;
 import telran.java51.forum.dto.PushPostDto;
 import telran.java51.forum.exceptions.PostNotFoundException;
 import telran.java51.forum.model.Post;
@@ -21,14 +21,18 @@ public class ForumServiceImpl implements ForumService {
 	final ModelMapper modelMapper;
 	
 	@Override
-	public Post addPost(String author, PushPostDto pushPostDto) {
-		PrePostDto prePostDto = new PrePostDto(author, pushPostDto.getTitle(), pushPostDto.getTags(), pushPostDto.getContent());
-		return forumRepository.save(modelMapper.map(prePostDto, Post.class));
+	public PostDto addPost(String author, PushPostDto pushPostDto) {
+		PostDto postDto = new PostDto(author, pushPostDto.getTitle(),
+				pushPostDto.getTags(), pushPostDto.getContent());
+		Post post = forumRepository.save(modelMapper.map(postDto, Post.class));
+		return modelMapper.map(post, PostDto.class);
 	}
 
 	@Override
-	public Post findPostById(String id) {
-		return forumRepository.findById(id).orElseThrow(PostNotFoundException::new);
+	public PostDto findPostById(String id) {
+		
+		Post post = forumRepository.findById(id).orElseThrow(PostNotFoundException::new);
+		return modelMapper.map(post, PostDto.class);
 	}
 
 	@Override
@@ -38,13 +42,13 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public List<Post> findPostsByAuthor(String author) {
+	public List<PostDto> findPostsByAuthor(String author) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Post addComment(String id, String user,
+	public PostDto addComment(String id, String user,
 			MessageInCommentDto messageInCommentDto) {
 		// TODO Auto-generated method stub
 		return null;
@@ -57,7 +61,7 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public List<Post> findPostsByTags(String[] tags) {
+	public List<PostDto> findPostsByTags(String[] tags) {
 		// TODO Auto-generated method stub
 		return null;
 	}

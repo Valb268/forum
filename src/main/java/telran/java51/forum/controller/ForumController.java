@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import telran.java51.forum.dto.PostDto;
 import telran.java51.forum.dto.PushPostDto;
-import telran.java51.forum.model.Post;
 import telran.java51.forum.service.ForumService;
 
 @RestController
@@ -18,12 +18,12 @@ public class ForumController {
 	final ForumService forumService;
 	
 	@PostMapping("/forum/post/{author}")
-	Post addPost(@PathVariable String author, @RequestBody PushPostDto pushPostDto) {
+	PostDto addPost(@PathVariable String author, @RequestBody PushPostDto pushPostDto) {
 		return forumService.addPost(author, pushPostDto);
 	}
 	
 	@GetMapping("/forum/post/{id}")
-	Post findPostById(@PathVariable String id) {
+	PostDto findPostById(@PathVariable String id) {
 		return forumService.findPostById(id);
 	}
 	
