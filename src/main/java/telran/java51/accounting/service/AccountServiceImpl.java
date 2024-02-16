@@ -4,13 +4,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import telran.java51.account.exceptions.AccountAlreadyExistsException;
-import telran.java51.account.exceptions.UserNotFoundException;
-import telran.java51.account.exceptions.WrongRoleException;
 import telran.java51.accounting.dto.NewUserDto;
 import telran.java51.accounting.dto.RolesDto;
 import telran.java51.accounting.dto.UpdateUserDto;
 import telran.java51.accounting.dto.UserDto;
+import telran.java51.accounting.exceptions.AccountAlreadyExistsException;
+import telran.java51.accounting.exceptions.UserNotFoundException;
+import telran.java51.accounting.exceptions.WrongRoleException;
 import telran.java51.accounting.model.User;
 import telran.java51.accounting.repository.AccountRepository;
 

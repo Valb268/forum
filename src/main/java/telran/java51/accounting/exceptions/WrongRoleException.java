@@ -1,4 +1,4 @@
-package telran.java51.account.exceptions;
+package telran.java51.accounting.exceptions;
 
 public class WrongRoleException extends RuntimeException {
 
