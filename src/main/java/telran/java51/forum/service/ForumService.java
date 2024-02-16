@@ -2,25 +2,31 @@ package telran.java51.forum.service;
 
 import java.util.List;
 
-import telran.java51.forum.dto.MessageInCommentDto;
+import telran.java51.forum.dto.NewCommentDto;
+import telran.java51.forum.dto.NewPostDto;
+import telran.java51.forum.dto.PeriodDto;
 import telran.java51.forum.dto.PostDto;
-import telran.java51.forum.dto.PushPostDto;
 
 public interface ForumService {
 
-	PostDto addPost(String author, PushPostDto pushPostDto);
+	PostDto addPost(String author, NewPostDto pushPostDto);
 	
 	PostDto findPostById(String id);
 	
-	void addLike(String id);
+	boolean addLike(String id);
 	
-	List<PostDto> findPostsByAuthor(String author);
+	Iterable<PostDto> findPostsByAuthor(String author);
 	
-	PostDto addComment(String id, String user, MessageInCommentDto messageInCommentDto);
+	PostDto addComment(String id, String user, NewCommentDto newCommentDto);
 	
-	void deletePost(String id);
+	PostDto removePost(String id);
 	
-	List<PostDto> findPostsByTags(String[] tags);
+	Iterable<PostDto> findPostsByTags(List<String> tags);
+	
+	PostDto updatePost(String id, NewPostDto updateDto);
+	
+	Iterable<PostDto> findPostsByPeriod(PeriodDto period);
+	
 	
 	
 	

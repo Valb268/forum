@@ -1,11 +1,13 @@
 package telran.java51.forum.dto;
 
+import java.time.LocalDate;
+
 import lombok.Getter;
 
 @Getter
 public class PeriodDto {
 
-	String dateFrom;
-	String dateTo;
+	LocalDate dateFrom;
+	LocalDate dateTo;
 	
 }

@@ -1,34 +1,27 @@
 package telran.java51.forum.dto;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import telran.java51.forum.model.Comment;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public class PostDto {
 	
 	String id;
+	@Setter
 	String author;
 	String title;
-	List<String> tags = new ArrayList<>();
+	Set<String> tags;
 	String content;
-	List<Comment> comments = new ArrayList<>();
-	String dataCreated = LocalDateTime.now().toString();
+	List<Comment> comments;
+	LocalDate dataCreated;
 	int likes;
-	public PostDto(String author, String title, List<String> tags,
-			String content) {
-		this.author = author;
-		this.title = title;
-		this.tags = tags;
-		this.content = content;
+	
 	}
 	
 	
-}
+
