@@ -19,8 +19,9 @@ public interface AccountService {
 	
 	RolesDto deleteRole(String login, String role);
 
-	boolean changePassword();
+	boolean changePassword(String login, String newPassword);
 	
 	UserDto getUser(String login);
+
 	
 }

@@ -1,5 +1,6 @@
 package telran.java51.accounting.service;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,8 @@ public class AccountServiceImpl implements AccountService {
 	public UserDto registerUser(NewUserDto newUser) {
 		User user = modelMapper.map(newUser, User.class);
 		if (!accountRepository.existsById(newUser.getLogin())) {
+			String password = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt());
+			user.setPassword(password);
 			user = accountRepository.save(user);
 		} else {
 			throw new AccountAlreadyExistsException();
@@ -98,7 +101,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public boolean changePassword() {
+	public boolean changePassword(String login, String newPasswords) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -109,4 +112,5 @@ public class AccountServiceImpl implements AccountService {
 		return modelMapper.map(user, UserDto.class);
 	}
 
+	
 }

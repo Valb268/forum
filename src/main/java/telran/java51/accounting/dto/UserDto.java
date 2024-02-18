@@ -9,5 +9,6 @@ public class UserDto {
 	String login;
 	String firstName;
 	String lastName;
+	
 	Set<String> roles;
 }
