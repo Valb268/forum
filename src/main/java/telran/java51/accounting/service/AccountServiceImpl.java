@@ -41,12 +41,6 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public UserDto loginUser() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public UserDto deleteUser(String login) {
 		User user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
 		accountRepository.deleteById(login);
@@ -101,9 +95,11 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public boolean changePassword(String login, String newPasswords) {
-		// TODO Auto-generated method stub
-		return false;
+	public void changePassword(String login, String newPassword) {
+		User user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+		String password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+		user.setPassword(password);
+		accountRepository.save(user);
 	}
 
 	@Override

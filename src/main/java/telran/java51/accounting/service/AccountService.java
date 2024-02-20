@@ -9,8 +9,6 @@ public interface AccountService {
 	
 	UserDto registerUser(NewUserDto newUser);
 	
-	UserDto loginUser();
-	
 	UserDto deleteUser(String login);
 	
 	UserDto updateUser(String login, UpdateUserDto updateUser);
@@ -19,7 +17,7 @@ public interface AccountService {
 	
 	RolesDto deleteRole(String login, String role);
 
-	boolean changePassword(String login, String newPassword);
+	void changePassword(String login, String newPassword);
 	
 	UserDto getUser(String login);
 

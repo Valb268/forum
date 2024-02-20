@@ -1,7 +1,6 @@
 package telran.java51.accounting.controller;
 
 import java.security.Principal;
-import java.util.Base64;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,12 +35,12 @@ public class AccountingController {
 	
 	
 	// to show RequestHeader
-	@PostMapping("/login")
-	public UserDto login(@RequestHeader("Authorization") String token) {
-		token = token.split(" ")[1];
-		String credentials = new String(Base64.getDecoder().decode(token));
-		return accountService.getUser(credentials.split(":")[0]);
-	}
+//	@PostMapping("/login")
+//	public UserDto login(@RequestHeader("Authorization") String token) {
+//		token = token.split(" ")[1];
+//		String credentials = new String(Base64.getDecoder().decode(token));
+//		return accountService.getUser(credentials.split(":")[0]);
+//	}
 	
 	
 	@PostMapping("/login")
