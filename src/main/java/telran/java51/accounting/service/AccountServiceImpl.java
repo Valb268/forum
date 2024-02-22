@@ -2,6 +2,7 @@ package telran.java51.accounting.service;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,12 @@ import telran.java51.accounting.repository.AccountRepository;
 
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl implements AccountService {
+public class AccountServiceImpl implements AccountService, CommandLineRunner {
 
 	final AccountRepository accountRepository;
 	final ModelMapper modelMapper;
 	enum UserRole {
-	    ADMIN,
+	    ADMINISTRATOR,
 	    MODERATOR,
 	    USER
 	}
@@ -76,7 +77,7 @@ public class AccountServiceImpl implements AccountService {
 	boolean isRoleCorrect(String role) {
 		
 		for (UserRole roleEnum : UserRole.values()) {
-			if (role.equals(roleEnum.name())) {
+			if (role.toUpperCase().equals(roleEnum.name())) {
 				return true;
 			}
 		}
@@ -106,6 +107,18 @@ public class AccountServiceImpl implements AccountService {
 	public UserDto getUser(String login) {
 		User user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
 		return modelMapper.map(user, UserDto.class);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		if(!accountRepository.existsById("admin")) {
+			String password = BCrypt.hashpw("admin", BCrypt.gensalt());
+			User user = new User("admin", "", "", password);
+			user.addRole("MODERATOR");
+			user.addRole("ADMINISTRATOR");
+			accountRepository.save(user);
+		}
+		
 	}
 
 	

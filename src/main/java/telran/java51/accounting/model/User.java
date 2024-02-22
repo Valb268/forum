@@ -39,11 +39,11 @@ public class User {
 	}
 	
 	public boolean addRole(String role) {
-		return this.roles.add(role);
+		return this.roles.add(role.toUpperCase());
 	}
 
 	public boolean deleteRole(String role) {
-		return this.roles.remove(role) ;
+		return this.roles.remove(role.toUpperCase()) ;
 	}
 	
 }

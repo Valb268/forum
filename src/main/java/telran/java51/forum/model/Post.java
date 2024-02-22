@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Singular;
 
 @Getter
 @Document(collection = "posts")
@@ -19,16 +20,18 @@ public class Post  {
 	String id;
 	@Setter
 	String content;
+	@Setter
 	String author;
+	@Singular
 	Set<String> tags;
 	@Setter
 	String title;
+	@Singular
 	List<Comment> comments;
 	LocalDateTime dateCreated;
 	int likes;
 	
 	public Post() {
-		System.out.println("custom constructor is invoked");
 		this.dateCreated = LocalDateTime.now();
 		this.comments = new ArrayList<Comment>();
 		this.tags = new HashSet<>();

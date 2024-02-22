@@ -55,18 +55,18 @@ public class AccountingController {
 	}
 	
 	@PutMapping("/user/{user}")
-	public UserDto updateUser(@PathVariable String login, @RequestBody UpdateUserDto updateUser) {
-		return accountService.updateUser(login, updateUser);
+	public UserDto updateUser(@PathVariable String user, @RequestBody UpdateUserDto updateUser) {
+		return accountService.updateUser(user, updateUser);
 	}
 	
 	@PutMapping("/user/{user}/role/{role}") 
-	public RolesDto addRole(@PathVariable String login, @PathVariable String role) {
-		return accountService.addRole(login, role);
+	public RolesDto addRole(@PathVariable String user, @PathVariable String role) {
+		return accountService.addRole(user, role);
 	}
 	
 	@DeleteMapping("/user/{user}/role/{role}")
-	public RolesDto deleteRole(@PathVariable String login, @PathVariable String role) {
-		return accountService.deleteRole(login, role);
+	public RolesDto deleteRole(@PathVariable String user, @PathVariable String role) {
+		return accountService.deleteRole(user, role);
 	}
 	
 	@PutMapping("/password")
