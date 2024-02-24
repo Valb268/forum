@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import telran.java51.accounting.model.User;
 import telran.java51.accounting.repository.AccountRepository;
+import telran.java51.forum.configuration.UserRole;
 
 @Component
 @RequiredArgsConstructor
@@ -35,7 +36,7 @@ public class DeleteUserFilter implements Filter {
 			User user = accountRepository
 					.findById(request.getUserPrincipal().getName()).get();
 			String owner = request.getServletPath().split("/user/")[1];
-			if (!(user.getLogin().equals(owner) || user.getRoles().contains("MODERATOR"))) {
+			if (!(user.getLogin().equals(owner) || user.getRoles().contains(UserRole.ADMINISTRATOR.toString()))) {
 				response.sendError(403, "Permission denied");
 				return;
 			}

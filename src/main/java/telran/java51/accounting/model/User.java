@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import telran.java51.forum.configuration.UserRole;
 
 @Getter
 @Document(collection = "users")
@@ -26,7 +27,7 @@ public class User {
 	
 	public User() {
 		this.roles = new HashSet<>();
-		this.roles.add("USER");
+		this.roles.add(UserRole.USER.toString());
 	}
 
 	public User(String login, String firstName, String lastName,

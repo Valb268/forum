@@ -15,6 +15,7 @@ import telran.java51.accounting.exceptions.UserNotFoundException;
 import telran.java51.accounting.exceptions.WrongRoleException;
 import telran.java51.accounting.model.User;
 import telran.java51.accounting.repository.AccountRepository;
+import telran.java51.forum.configuration.UserRole;
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +23,7 @@ public class AccountServiceImpl implements AccountService, CommandLineRunner {
 
 	final AccountRepository accountRepository;
 	final ModelMapper modelMapper;
-	enum UserRole {
-	    ADMINISTRATOR,
-	    MODERATOR,
-	    USER
-	}
-
+	
 	@Override
 	public UserDto registerUser(NewUserDto newUser) {
 		User user = modelMapper.map(newUser, User.class);
@@ -77,7 +73,7 @@ public class AccountServiceImpl implements AccountService, CommandLineRunner {
 	boolean isRoleCorrect(String role) {
 		
 		for (UserRole roleEnum : UserRole.values()) {
-			if (role.toUpperCase().equals(roleEnum.name())) {
+			if (role.toUpperCase().equals(roleEnum.toString())) {
 				return true;
 			}
 		}
@@ -114,8 +110,8 @@ public class AccountServiceImpl implements AccountService, CommandLineRunner {
 		if(!accountRepository.existsById("admin")) {
 			String password = BCrypt.hashpw("admin", BCrypt.gensalt());
 			User user = new User("admin", "", "", password);
-			user.addRole("MODERATOR");
-			user.addRole("ADMINISTRATOR");
+			user.addRole(UserRole.MODERATOR.toString());
+			user.addRole(UserRole.ADMINISTRATOR.toString());
 			accountRepository.save(user);
 		}
 		

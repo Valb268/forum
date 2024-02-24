@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import telran.java51.accounting.model.User;
 import telran.java51.accounting.repository.AccountRepository;
+import telran.java51.forum.configuration.UserRole;
 import telran.java51.forum.exceptions.PostNotFoundException;
 import telran.java51.forum.model.Post;
 import telran.java51.forum.repository.ForumRepository;
@@ -45,7 +46,7 @@ public class DeletePostFilter implements Filter {
 			try {
 				Post post = forumRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 				if (!(user.getLogin().equals(post.getAuthor()) 
-						|| user.getRoles().contains("ADMINISTRATOR"))) {
+						|| user.getRoles().contains(UserRole.MODERATOR.toString()))) {
 					response.sendError(403, "Permission denied");
 					return;
 				}
