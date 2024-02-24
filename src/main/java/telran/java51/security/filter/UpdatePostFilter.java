@@ -16,14 +16,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import telran.java51.accounting.model.User;
 import telran.java51.accounting.repository.AccountRepository;
+import telran.java51.forum.exceptions.PostNotFoundException;
+import telran.java51.forum.model.Post;
+import telran.java51.forum.repository.ForumRepository;
 
 @Component
 @RequiredArgsConstructor
-@Order(40)
-public class DeleteUserFilter implements Filter {
+@Order(50)
+public class UpdatePostFilter implements Filter {
 
 	final AccountRepository accountRepository;
-
+	final ForumRepository forumRepository;
+	
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
@@ -32,21 +36,28 @@ public class DeleteUserFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) resp;
 
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
+
 			User user = accountRepository
 					.findById(request.getUserPrincipal().getName()).get();
-			String owner = request.getServletPath().split("/user/")[1];
-			if (!(user.getLogin().equals(owner) || user.getRoles().contains("MODERATOR"))) {
-				response.sendError(403, "Permission denied");
+			
+			String[] path = request.getServletPath().split("/");
+			String postId = path[path.length - 1];
+			try {
+				Post post = forumRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+				if (!user.getLogin().equals(post.getAuthor() )) {
+					response.sendError(403, "Permission denied");
+					return;
+				}
+			} catch (PostNotFoundException e) {
+				response.sendError(404, "Post not found");
 				return;
 			}
-
 		}
 		chain.doFilter(request, response);
 	}
-
+	
 	private boolean checkEndPoint(String method, String path) {
-		return (HttpMethod.DELETE.matches(method) && path.matches("/account/user/\\w+"));
+		return (HttpMethod.PUT.matches(method) && path.matches("/forum/post/\\w+"));
 	}
-
 
 }

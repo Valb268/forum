@@ -19,8 +19,8 @@ import telran.java51.accounting.repository.AccountRepository;
 
 @Component
 @RequiredArgsConstructor
-@Order(40)
-public class DeleteUserFilter implements Filter {
+@Order(70)
+public class AddCommentFilter implements Filter {
 
 	final AccountRepository accountRepository;
 
@@ -34,19 +34,20 @@ public class DeleteUserFilter implements Filter {
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
 			User user = accountRepository
 					.findById(request.getUserPrincipal().getName()).get();
-			String owner = request.getServletPath().split("/user/")[1];
-			if (!(user.getLogin().equals(owner) || user.getRoles().contains("MODERATOR"))) {
+
+			String[] path = request.getServletPath().split("/");
+			String author = path[path.length - 1];
+			if (!user.getLogin().equals(author)) {
 				response.sendError(403, "Permission denied");
 				return;
 			}
-
 		}
 		chain.doFilter(request, response);
 	}
 
 	private boolean checkEndPoint(String method, String path) {
-		return (HttpMethod.DELETE.matches(method) && path.matches("/account/user/\\w+"));
+		return (HttpMethod.PUT.matches(method)
+				&& path.matches("/forum/post/\\w+/comment/\\w+"));
 	}
-
 
 }

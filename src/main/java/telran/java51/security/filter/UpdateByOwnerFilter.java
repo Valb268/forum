@@ -32,6 +32,7 @@ public class UpdateByOwnerFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) resp;
 
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
+
 			User user = accountRepository
 					.findById(request.getUserPrincipal().getName()).get();
 			String owner = request.getServletPath().split("/user/")[1];

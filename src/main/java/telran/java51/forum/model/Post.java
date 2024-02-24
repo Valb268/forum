@@ -63,11 +63,11 @@ public class Post  {
 	}
 	
 	public void addLike() {
-		this.likes = this.likes < Integer.MAX_VALUE - 1 ? this.likes++ : this.likes;
+		this.likes = this.likes < Integer.MAX_VALUE - 1 ? ++this.likes : this.likes;
 	}
 	
 	public void removeLike() {
-		this.likes = this.likes > 0 ? this.likes-- : this.likes;
+		this.likes = this.likes > 0 ? --this.likes : this.likes;
 	}
 	
 }
