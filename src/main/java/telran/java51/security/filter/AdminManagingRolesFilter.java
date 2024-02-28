@@ -12,33 +12,25 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import telran.java51.accounting.model.User;
-import telran.java51.accounting.repository.AccountRepository;
 import telran.java51.forum.configuration.UserRole;
+import telran.java51.security.model.User;
 
 @Component
-@RequiredArgsConstructor
 @Order(20)
 public class AdminManagingRolesFilter implements Filter {
 
-	final AccountRepository accountRepository;
-	
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		
-		
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
-			User user = accountRepository.findById(request.getUserPrincipal().getName())
-					.get();
+			User user = (User) request.getUserPrincipal();
 			if(!user.getRoles().contains(UserRole.ADMINISTRATOR.toString())) {
 				response.sendError(403, "Permission denied");
 				return;
 			}
-			
 		}
 		chain.doFilter(request, response);
 	}

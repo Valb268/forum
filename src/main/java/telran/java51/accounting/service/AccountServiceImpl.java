@@ -13,7 +13,7 @@ import telran.java51.accounting.dto.UserDto;
 import telran.java51.accounting.exceptions.AccountAlreadyExistsException;
 import telran.java51.accounting.exceptions.UserNotFoundException;
 import telran.java51.accounting.exceptions.WrongRoleException;
-import telran.java51.accounting.model.User;
+import telran.java51.accounting.model.UserAccount;
 import telran.java51.accounting.repository.AccountRepository;
 import telran.java51.forum.configuration.UserRole;
 
@@ -26,7 +26,7 @@ public class AccountServiceImpl implements AccountService, CommandLineRunner {
 	
 	@Override
 	public UserDto registerUser(NewUserDto newUser) {
-		User user = modelMapper.map(newUser, User.class);
+		UserAccount user = modelMapper.map(newUser, UserAccount.class);
 		if (!accountRepository.existsById(newUser.getLogin())) {
 			String password = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt());
 			user.setPassword(password);
@@ -39,14 +39,14 @@ public class AccountServiceImpl implements AccountService, CommandLineRunner {
 
 	@Override
 	public UserDto deleteUser(String login) {
-		User user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+		UserAccount user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
 		accountRepository.deleteById(login);
 		return modelMapper.map(user, UserDto.class);
 	}
 
 	@Override
 	public UserDto updateUser(String login, UpdateUserDto updateUser) {
-		User user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+		UserAccount user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
 		String firstName = updateUser.getFirstName();
 		if (firstName != null) {
 			user.setFirstName(firstName);
@@ -61,39 +61,41 @@ public class AccountServiceImpl implements AccountService, CommandLineRunner {
 
 	@Override
 	public RolesDto addRole(String login, String role) {
-		if (!isRoleCorrect(role)) {
+		UserRole roleEnum = checkAndGetRole(role);
+		if (roleEnum == null) {
 			throw new WrongRoleException("Wrong role");
 		}
-		User user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
-		user.addRole(role);
+		UserAccount user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+		user.addRole(roleEnum);
 		user = accountRepository.save(user);
 		return modelMapper.map(user, RolesDto.class);
 	}
 	
-	boolean isRoleCorrect(String role) {
+	UserRole checkAndGetRole(String role) {
 		
 		for (UserRole roleEnum : UserRole.values()) {
 			if (role.toUpperCase().equals(roleEnum.toString())) {
-				return true;
+				return roleEnum;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	@Override
 	public RolesDto deleteRole(String login, String role) {
-		if (!isRoleCorrect(role)) {
+		UserRole roleEnum = checkAndGetRole(role);
+		if (roleEnum == null) {
 			throw new WrongRoleException("Wrong role");
 		}
-		User user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
-		user.deleteRole(role);
+		UserAccount user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+		user.deleteRole(roleEnum);
 		user = accountRepository.save(user);
 		return modelMapper.map(user, RolesDto.class);
 	}
 
 	@Override
 	public void changePassword(String login, String newPassword) {
-		User user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+		UserAccount user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
 		String password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 		user.setPassword(password);
 		accountRepository.save(user);
@@ -101,7 +103,7 @@ public class AccountServiceImpl implements AccountService, CommandLineRunner {
 
 	@Override
 	public UserDto getUser(String login) {
-		User user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+		UserAccount user = accountRepository.findById(login).orElseThrow(UserNotFoundException::new);
 		return modelMapper.map(user, UserDto.class);
 	}
 
@@ -109,9 +111,9 @@ public class AccountServiceImpl implements AccountService, CommandLineRunner {
 	public void run(String... args) throws Exception {
 		if(!accountRepository.existsById("admin")) {
 			String password = BCrypt.hashpw("admin", BCrypt.gensalt());
-			User user = new User("admin", "", "", password);
-			user.addRole(UserRole.MODERATOR.toString());
-			user.addRole(UserRole.ADMINISTRATOR.toString());
+			UserAccount user = new UserAccount("admin", "", "", password);
+			user.addRole(UserRole.MODERATOR);
+			user.addRole(UserRole.ADMINISTRATOR);
 			accountRepository.save(user);
 		}
 		

@@ -2,8 +2,8 @@ package telran.java51.accounting.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import telran.java51.accounting.model.User;
+import telran.java51.accounting.model.UserAccount;
 
-public interface AccountRepository extends CrudRepository<User, String> {
+public interface AccountRepository extends CrudRepository<UserAccount, String> {
 
 }

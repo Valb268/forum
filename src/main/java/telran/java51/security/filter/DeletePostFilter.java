@@ -14,19 +14,17 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import telran.java51.accounting.model.User;
-import telran.java51.accounting.repository.AccountRepository;
 import telran.java51.forum.configuration.UserRole;
 import telran.java51.forum.exceptions.PostNotFoundException;
 import telran.java51.forum.model.Post;
 import telran.java51.forum.repository.ForumRepository;
+import telran.java51.security.model.User;
 
 @Component
 @RequiredArgsConstructor
 @Order(80)
 public class DeletePostFilter implements Filter {
 
-	final AccountRepository accountRepository;
 	final ForumRepository forumRepository;
 	
 	@Override
@@ -38,14 +36,13 @@ public class DeletePostFilter implements Filter {
 
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
 
-			User user = accountRepository
-					.findById(request.getUserPrincipal().getName()).get();
+			User user = (User) request.getUserPrincipal();
 			
 			String[] path = request.getServletPath().split("/");
 			String postId = path[path.length - 1];
 			try {
 				Post post = forumRepository.findById(postId).orElseThrow(PostNotFoundException::new);
-				if (!(user.getLogin().equals(post.getAuthor()) 
+				if (!(user.getName().equals(post.getAuthor()) 
 						|| user.getRoles().contains(UserRole.MODERATOR.toString()))) {
 					response.sendError(403, "Permission denied");
 					return;

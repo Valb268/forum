@@ -14,7 +14,7 @@ import telran.java51.forum.configuration.UserRole;
 @Getter
 @Document(collection = "users")
 @EqualsAndHashCode(of = "login")
-public class User {
+public class UserAccount {
 	@Id
 	String login;
 	@Setter
@@ -23,14 +23,14 @@ public class User {
 	String lastName;
 	@Setter
 	String password;
-	Set<String> roles;
+	Set<UserRole> roles;
 	
-	public User() {
+	public UserAccount() {
 		this.roles = new HashSet<>();
-		this.roles.add(UserRole.USER.toString());
+		this.roles.add(UserRole.USER);
 	}
 
-	public User(String login, String firstName, String lastName,
+	public UserAccount(String login, String firstName, String lastName,
 			String password) {
 		this();
 		this.login = login;
@@ -39,12 +39,12 @@ public class User {
 		this.password = password;
 	}
 	
-	public boolean addRole(String role) {
-		return this.roles.add(role.toUpperCase());
+	public boolean addRole(UserRole role) {
+		return this.roles.add(role);
 	}
 
-	public boolean deleteRole(String role) {
-		return this.roles.remove(role.toUpperCase()) ;
+	public boolean deleteRole(UserRole role) {
+		return this.roles.remove(role) ;
 	}
 	
 }

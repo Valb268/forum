@@ -1,6 +1,7 @@
 package telran.java51.security.filter;
 
 import java.io.IOException;
+import java.security.Principal;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
@@ -13,16 +14,10 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import telran.java51.accounting.model.User;
-import telran.java51.accounting.repository.AccountRepository;
 
 @Component
-@RequiredArgsConstructor
 @Order(30)
 public class UpdateByOwnerFilter implements Filter {
-
-	final AccountRepository accountRepository;
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
@@ -33,10 +28,10 @@ public class UpdateByOwnerFilter implements Filter {
 
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
 
-			User user = accountRepository
-					.findById(request.getUserPrincipal().getName()).get();
-			String owner = request.getServletPath().split("/user/")[1];
-			if (!user.getLogin().equals(owner)) {
+			Principal principal = request.getUserPrincipal();
+			String[] path = request.getServletPath().split("/");
+			String owner = path[path.length - 1];
+			if (!principal.getName().equals(owner)) {
 				response.sendError(403, "Permission denied");
 				return;
 			}
@@ -46,7 +41,12 @@ public class UpdateByOwnerFilter implements Filter {
 	}
 
 	private boolean checkEndPoint(String method, String path) {
-		return (HttpMethod.PUT.matches(method) && path.matches("/account/user/\\w+"));
+		return (HttpMethod.PUT.matches(method)
+				&& path.matches("/account/user/\\w+"))
+				|| (HttpMethod.POST.matches(method)
+						&& path.matches("/forum/post/\\w+"))
+				|| (HttpMethod.PUT.matches(method)
+						&& path.matches("/forum/post/\\w+/comment/\\w+"));
 	}
 
 }
