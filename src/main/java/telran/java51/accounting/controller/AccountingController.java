@@ -34,15 +34,6 @@ public class AccountingController {
 	}
 	
 	
-	// to show RequestHeader
-//	@PostMapping("/login")
-//	public UserDto login(@RequestHeader("Authorization") String token) {
-//		token = token.split(" ")[1];
-//		String credentials = new String(Base64.getDecoder().decode(token));
-//		return accountService.getUser(credentials.split(":")[0]);
-//	}
-	
-	
 	@PostMapping("/login")
 	public UserDto loginUser(Principal principal) {
 		return accountService.getUser(principal.getName());
